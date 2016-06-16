@@ -1,0 +1,12 @@
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\bin\Debug\BioMetrixCore.exe.config
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\bin\Debug\BioMetrixCore.exe
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\bin\Debug\BioMetrixCore.pdb
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.csprojResolveAssemblyReference.cache
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\Interop.zkemkeeper.dll
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.csproj.ResolveComReference.cache
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.DataEmpty.resources
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.Master.resources
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.Properties.Resources.resources
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.csproj.GenerateResource.Cache
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.exe
+D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.pdb
