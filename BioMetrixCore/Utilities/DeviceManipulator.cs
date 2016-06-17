@@ -6,29 +6,23 @@ namespace BioMetrixCore
 {
     internal class DeviceManipulator
     {
-        public ICollection<UserInfo> FetchFingerPrintTemplate(ZkemClient objZkeeper, int machineNumber)
+
+        public ICollection<UserInfo> GetAllUserInfo(ZkemClient objZkeeper, int machineNumber)
         {
-            string sdwEnrollNumber = "";
-            string sName = "";
-            string sPassword = "";
-            int iPrivilege = 0;
+            string sdwEnrollNumber = string.Empty, sName = string.Empty, sPassword = string.Empty, sTmpData = string.Empty;
+            int iPrivilege = 0, iTmpLength = 0, iFlag = 0, idwFingerIndex;
             bool bEnabled = false;
 
-            int idwFingerIndex;
-            string sTmpData = "";
-            int iTmpLength = 0;
-            int iFlag = 0;
-
             ICollection<UserInfo> lstFPTemplates = new List<UserInfo>();
-            // objZkeeper.EnableDevice(machineNumber, false);
-            objZkeeper.ReadAllUserID(machineNumber);//read all the user information to the memory
-            objZkeeper.ReadAllTemplate(machineNumber);//read all the users' fingerprint templates to the memory
 
-            while (objZkeeper.SSR_GetAllUserInfo(machineNumber, out sdwEnrollNumber, out sName, out sPassword, out iPrivilege, out bEnabled))//get all the users' information from the memory
+            objZkeeper.ReadAllUserID(machineNumber);
+            objZkeeper.ReadAllTemplate(machineNumber);
+
+            while (objZkeeper.SSR_GetAllUserInfo(machineNumber, out sdwEnrollNumber, out sName, out sPassword, out iPrivilege, out bEnabled))
             {
                 for (idwFingerIndex = 0; idwFingerIndex < 10; idwFingerIndex++)
                 {
-                    if (objZkeeper.GetUserTmpExStr(machineNumber, sdwEnrollNumber, idwFingerIndex, out iFlag, out sTmpData, out iTmpLength))//get the corresponding templates string and length from the memory
+                    if (objZkeeper.GetUserTmpExStr(machineNumber, sdwEnrollNumber, idwFingerIndex, out iFlag, out sTmpData, out iTmpLength))
                     {
                         UserInfo fpInfo = new UserInfo();
                         fpInfo.MachineNumber = machineNumber;
@@ -46,7 +40,6 @@ namespace BioMetrixCore
                 }
 
             }
-            //    objZkeeper.EnableDevice(machineNumber, true);
             return lstFPTemplates;
         }
 
@@ -63,12 +56,13 @@ namespace BioMetrixCore
             int dwSecond = 0;
             int dwWorkCode = 0;
 
-            //  objZkeeper.EnableDevice(machineNumber, false);
             ICollection<MachineInfo> lstEnrollData = new List<MachineInfo>();
 
             objZkeeper.ReadAllGLogData(machineNumber);
 
             while (objZkeeper.SSR_GetGeneralLogData(machineNumber, out dwEnrollNumber1, out dwVerifyMode, out dwInOutMode, out dwYear, out dwMonth, out dwDay, out dwHour, out dwMinute, out dwSecond, ref dwWorkCode))
+
+
             {
                 string inputDate = new DateTime(dwYear, dwMonth, dwDay, dwHour, dwMinute, dwSecond).ToString();
 
@@ -81,11 +75,6 @@ namespace BioMetrixCore
             }
 
             return lstEnrollData;
-            //if (objZkeeper.ClearGLog(machineNumber))
-            // {
-            //    Utilities.ShowStatusBar("User Attandance Imported to Database Successfully!!", DisplayMessage, true);
-            //}
-            // objZkeeper.EnableDevice(machineNumber, true);
         }
 
         public ICollection<UserIDInfo> GetAllUserID(ZkemClient objZkeeper, int machineNumber)
@@ -120,10 +109,9 @@ namespace BioMetrixCore
             byte[] byTmpData = new byte[2000];
             int tempLength = 0;
 
-            int idwFingerIndex = 0;// Convert.ToInt32(cbFingerIndex.Text.Trim());
+            int idwFingerIndex = 0;// [ <--- Enter your fingerprint index here ]
             int iFlag = 0;
 
-            //bool enableDevice = objZkeeper.EnableDevice(machineNumber, false);
             objZkeeper.ReadAllTemplate(machineNumber);
 
             while (objZkeeper.SSR_GetUserInfo(machineNumber, enrollNo, out name, out password, out previlage, out enabled))
@@ -133,7 +121,6 @@ namespace BioMetrixCore
                     break;
                 }
             }
-            //objZkeeper.EnableDevice(machineNumber, true);
         }
 
 
@@ -153,9 +140,9 @@ namespace BioMetrixCore
             string sEnabled = "";
             bool bEnabled = false;
 
-            if (objZkeeper.BeginBatchUpdate(machineNumber, iUpdateFlag))//create memory space for batching data
+            if (objZkeeper.BeginBatchUpdate(machineNumber, iUpdateFlag))
             {
-                string sLastEnrollNumber = "";//the former enrollnumber you have upload(define original value as 0)
+                string sLastEnrollNumber = "";
 
                 for (int i = 0; i < lstUserInfo.Count; i++)
                 {
@@ -199,7 +186,7 @@ namespace BioMetrixCore
             int iDataFlag = (int)clearFlag;
 
             if (objZkeeper.ClearData(machineNumber, iDataFlag))
-                return objZkeeper.RefreshData(machineNumber);//the data in the device should be refreshed               
+                return objZkeeper.RefreshData(machineNumber);
             else
             {
                 int idwErrorCode = 0;
@@ -226,7 +213,7 @@ namespace BioMetrixCore
             {
                 sb.Append("Firmware V: ");
                 sb.Append(returnValue);
-                sb.Append("\n");
+                sb.Append(",");
             }
 
 
@@ -236,7 +223,7 @@ namespace BioMetrixCore
             {
                 sb.Append("Vendor: ");
                 sb.Append(returnValue);
-                sb.Append("\n");
+                sb.Append(",");
             }
 
             string sWiegandFmt = string.Empty;
@@ -248,7 +235,7 @@ namespace BioMetrixCore
             {
                 sb.Append("SDK V: ");
                 sb.Append(returnValue);
-                sb.Append("\n");
+                sb.Append(",");
             }
 
             returnValue = string.Empty;
@@ -257,7 +244,7 @@ namespace BioMetrixCore
             {
                 sb.Append("Serial No: ");
                 sb.Append(returnValue);
-                sb.Append("\n");
+                sb.Append(",");
             }
 
             returnValue = string.Empty;
@@ -266,7 +253,6 @@ namespace BioMetrixCore
             {
                 sb.Append("Device MAC: ");
                 sb.Append(returnValue);
-                sb.Append("\n");
             }
 
             return sb.ToString();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -11,6 +12,8 @@ namespace BioMetrixCore
 {
     internal class UniversalStatic
     {
+
+        public const string acx_Disconnect = "Disconnected";
         public static bool ValidateIP(string addrString)
         {
             IPAddress address;
@@ -74,6 +77,29 @@ namespace BioMetrixCore
             MemoryStream ms = new MemoryStream(bArray1);
             Image logo = Image.FromStream(ms, true, true);
             return logo;
+        }
+        public static string IntegerValidation(char[] enteredString, string actualString)
+        {
+            foreach (char c in enteredString.AsEnumerable())
+            {
+
+                if (Char.IsDigit(c))
+                { actualString = actualString + c; }
+                else
+                {
+                    actualString.Replace(c, ' ');
+                    actualString.Trim();
+                }
+            }
+            return actualString;
+        }
+
+        public static void ValidateInteger(TextBox tbx)
+        {
+            string actualString = string.Empty;
+            char[] enteredString = tbx.Text.ToCharArray();
+            tbx.Text = IntegerValidation(enteredString, actualString);
+            tbx.Select(tbx.Text.Length, 0);
         }
 
 

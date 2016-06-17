@@ -6,6 +6,12 @@ namespace BioMetrixCore
 {
     public class ZkemClient : IZKEM
     {
+        Action<object, string> RaiseDeviceEvent;
+
+        public ZkemClient(Action<object, string> RaiseDeviceEvent)
+        { this.RaiseDeviceEvent = RaiseDeviceEvent; }
+
+
         CZKEM objCZKEM = new CZKEM();
 
         #region 'What we will be using'
@@ -40,14 +46,13 @@ namespace BioMetrixCore
 
         public bool Connect_Net(string IPAdd, int Port)
         {
-
             if (objCZKEM.Connect_Net(IPAdd, Port))
             {
-                if (objCZKEM.RegEvent(1, 65535))
+                //65535, 32767
+                if (objCZKEM.RegEvent(1, 32767))
                 {
                     // [ Register your events here ]
                     // [ Go through the _IZKEMEvents_Event class for a complete list of events
-
                     objCZKEM.OnConnected += ObjCZKEM_OnConnected;
                     objCZKEM.OnDisConnected += objCZKEM_OnDisConnected;
                     objCZKEM.OnEnrollFinger += ObjCZKEM_OnEnrollFinger;
@@ -56,7 +61,6 @@ namespace BioMetrixCore
                 }
                 return true;
             }
-
             return false;
         }
 
@@ -76,7 +80,7 @@ namespace BioMetrixCore
 
         void objCZKEM_OnDisConnected()
         {
-            Console.WriteLine("The Biometric Device is Disconnected !!!");
+            RaiseDeviceEvent(this, UniversalStatic.acx_Disconnect);
         }
 
 

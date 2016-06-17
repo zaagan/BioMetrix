@@ -26,13 +26,13 @@ namespace BioMetrixCore
                 else
                 {
                     ShowStatusBar("The device is diconnected !!", true);
-
                     objZkeeper.Disconnect();
                     btnConnect.Text = "Connect";
                     ToggleControls(false);
                 }
             }
         }
+
 
         private void ToggleControls(bool value)
         {
@@ -45,6 +45,11 @@ namespace BioMetrixCore
             btnEnableDevice.Enabled = value;
             btnDisableDevice.Enabled = value;
             btnGetAllUserID.Enabled = value;
+
+            tbxMachineNumber.Enabled = !value;
+            tbxPort.Enabled = !value;
+            tbxDeviceIP.Enabled = !value;
+
         }
 
         public Master()
@@ -53,7 +58,26 @@ namespace BioMetrixCore
             ToggleControls(false);
             ShowStatusBar(string.Empty, true);
             DisplayEmpty();
-            dgvRecords.CellClick += grdList_CellClick;
+        }
+
+
+        private void RaiseDeviceEvent(object sender, string actionType)
+        {
+            switch (actionType)
+            {
+                case UniversalStatic.acx_Disconnect:
+                    {
+                        ShowStatusBar("The device is switched off", true);
+                        DisplayEmpty();
+                        btnConnect.Text = "Connect";
+                        ToggleControls(false);
+                        break;
+                    }
+
+                default:
+                    break;
+            }
+
         }
 
 
@@ -89,7 +113,7 @@ namespace BioMetrixCore
                 if (!isValidIpA)
                     throw new Exception("The device at " + ipAddress + ":" + port + " did not respond!!");
 
-                objZkeeper = new ZkemClient();
+                objZkeeper = new ZkemClient(RaiseDeviceEvent);
                 IsDeviceConnected = objZkeeper.Connect_Net(ipAddress, portNumber);
 
                 if (IsDeviceConnected)
@@ -171,9 +195,7 @@ namespace BioMetrixCore
 
         private void btnBeep_Click(object sender, EventArgs e)
         {
-            //            bool isConnected = objZkeeper.Connect_Net(tbxDeviceIP.Text.Trim(), Convert.ToInt32(tbxPort.Text.Trim()));
             objZkeeper.Beep(100);
-
         }
 
         private void btnDownloadFingerPrint_Click(object sender, EventArgs e)
@@ -182,7 +204,7 @@ namespace BioMetrixCore
             {
                 ShowStatusBar(string.Empty, true);
 
-                ICollection<UserInfo> lstFingerPrintTemplates = manipulator.FetchFingerPrintTemplate(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
+                ICollection<UserInfo> lstFingerPrintTemplates = manipulator.GetAllUserInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
                 if (lstFingerPrintTemplates != null && lstFingerPrintTemplates.Count > 0)
                 {
                     BindToGridView(lstFingerPrintTemplates);
@@ -242,63 +264,7 @@ namespace BioMetrixCore
             UniversalStatic.ChangeGridProperties(dgvRecords);
         }
 
-        private void grdList_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                this.Cursor = Cursors.WaitCursor;
-                //if (e.ColumnIndex == dgvRecords.Columns["Edit"].Index && e.RowIndex >= 0)
-                //{
-                //    int companyID = Convert.ToInt32(dgvCompany.CurrentRow.Cells["CompanyID"].Value);
-
-                //    if (Utilities.GenerateFailure(ActionType.Edit, dgvCompany))
-                //    {
-                //        this.Cursor = Cursors.Default;
-                //        return;
-                //    }
-
-                //    AddSupplierCompany frmUpdateSupplierCompany = new AddSupplierCompany(this, companyID, false);
-                //    frmUpdateSupplierCompany.Text = "Update Suppler Company";
-                //    frmUpdateSupplierCompany.lblHeader.Text = "UPDATE SUPPLER COMPANY";
-                //    frmUpdateSupplierCompany.ShowDialog();
-                //}
-                //else if (e.ColumnIndex == dgvCompany.Columns["Delete"].Index && e.RowIndex >= 0)
-                //{
-                //    if (Utilities.GenerateFailure(ActionType.Delete, dgvCompany))
-                //    {
-                //        this.Cursor = Cursors.Default;
-                //        return;
-                //    }
-
-                //    DialogResult objDialogResult = MessageBox.Show(MessageManager.SupplierCompany_DeleteMessage, MessageManager.SupplierCompany_DeleteCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                //    if (objDialogResult == DialogResult.Yes)
-                //    {
-                //        int companyID = Convert.ToInt32(dgvCompany.CurrentRow.Cells["CompanyID"].Value);
-                //        ItemController masterController = new ItemController();
-                //        int returnValue = masterController.SupplierCompanyDelete(companyID, Utilities.GetCommonInfo());
-                //        switch (returnValue)
-                //        {
-                //            case 1:
-                //                GetData();
-                //                Utilities.NotifyMaster(MessageManager.SupplierCompany_Delete_Successfull, true);
-                //                break;
-                //            default:
-                //                Utilities.NotifyMaster(MessageManager.Transaction_Failure, false);
-                //                break;
-                //        }
-                //    }
-
-                //}
-            }
-            catch (Exception ex)
-            {
-                ShowStatusBar(ex.Message, false);
-            }
-
-            this.Cursor = Cursors.Default;
-
-        }
-
+      
 
         private void DisplayListOutput(string message)
         {
@@ -318,10 +284,6 @@ namespace BioMetrixCore
         { UniversalStatic.DrawLineInFooter(pnlHeader, Color.FromArgb(204, 204, 204), 2); }
 
 
-        ~Master()
-        {
-            dgvRecords.CellClick -= grdList_CellClick;
-        }
 
         private void btnPowerOff_Click(object sender, EventArgs e)
         {
@@ -333,7 +295,6 @@ namespace BioMetrixCore
             {
                 bool deviceOff = objZkeeper.PowerOffDevice(int.Parse(tbxMachineNumber.Text.Trim()));
 
-                ShowStatusBar("The device is switched off", true);
             }
 
             this.Cursor = Cursors.Default;
@@ -368,19 +329,31 @@ namespace BioMetrixCore
             string deviceTime = new DateTime(dwYear, dwMonth, dwDay, dwHour, dwMinute, dwSecond).ToString();
             List<DeviceTimeInfo> lstDeviceInfo = new List<DeviceTimeInfo>();
             lstDeviceInfo.Add(new DeviceTimeInfo() { DeviceTime = deviceTime });
-                BindToGridView(lstDeviceInfo);
+            BindToGridView(lstDeviceInfo);
         }
+        
 
         private void btnEnableDevice_Click(object sender, EventArgs e)
         {
+            // This is of no use since i implemented zkemKeeper the other way
             bool deviceEnabled = objZkeeper.EnableDevice(int.Parse(tbxMachineNumber.Text.Trim()), true);
+
         }
+
+     
 
         private void btnDisableDevice_Click(object sender, EventArgs e)
         {
+            // This is of no use since i implemented zkemKeeper the other way
             bool deviceDisabled = objZkeeper.DisableDeviceWithTimeOut(int.Parse(tbxMachineNumber.Text.Trim()), 3000);
-
         }
+
+        private void tbxPort_TextChanged(object sender, EventArgs e)
+        { UniversalStatic.ValidateInteger(tbxPort); }
+
+        private void tbxMachineNumber_TextChanged(object sender, EventArgs e)
+        { UniversalStatic.ValidateInteger(tbxMachineNumber); }
+
 
     }
 }

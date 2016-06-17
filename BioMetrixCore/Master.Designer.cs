@@ -53,6 +53,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnGetAllUserID = new System.Windows.Forms.Button();
             this.lblDeviceInfo = new System.Windows.Forms.Label();
+            this.btnUploadUserInfo = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecords)).BeginInit();
             this.panel1.SuspendLayout();
@@ -62,7 +63,7 @@
             // tbxDeviceIP
             // 
             this.tbxDeviceIP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxDeviceIP.Location = new System.Drawing.Point(224, 9);
+            this.tbxDeviceIP.Location = new System.Drawing.Point(296, 9);
             this.tbxDeviceIP.Name = "tbxDeviceIP";
             this.tbxDeviceIP.Size = new System.Drawing.Size(99, 22);
             this.tbxDeviceIP.TabIndex = 0;
@@ -72,7 +73,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(166, 12);
+            this.label1.Location = new System.Drawing.Point(238, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 13);
             this.label1.TabIndex = 1;
@@ -82,7 +83,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(329, 14);
+            this.label2.Location = new System.Drawing.Point(401, 14);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 3;
@@ -91,16 +92,18 @@
             // tbxPort
             // 
             this.tbxPort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxPort.Location = new System.Drawing.Point(361, 9);
+            this.tbxPort.Location = new System.Drawing.Point(433, 9);
+            this.tbxPort.MaxLength = 6;
             this.tbxPort.Name = "tbxPort";
             this.tbxPort.Size = new System.Drawing.Size(56, 22);
             this.tbxPort.TabIndex = 2;
             this.tbxPort.Text = "4370";
+            this.tbxPort.TextChanged += new System.EventHandler(this.tbxPort_TextChanged);
             // 
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.Location = new System.Drawing.Point(567, 7);
+            this.btnConnect.Location = new System.Drawing.Point(639, 9);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(75, 23);
             this.btnConnect.TabIndex = 4;
@@ -111,7 +114,7 @@
             // btnPingDevice
             // 
             this.btnPingDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPingDevice.Location = new System.Drawing.Point(648, 7);
+            this.btnPingDevice.Location = new System.Drawing.Point(720, 9);
             this.btnPingDevice.Name = "btnPingDevice";
             this.btnPingDevice.Size = new System.Drawing.Size(75, 23);
             this.btnPingDevice.TabIndex = 5;
@@ -127,7 +130,7 @@
             this.lblStatus.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.lblStatus.Size = new System.Drawing.Size(743, 25);
+            this.lblStatus.Size = new System.Drawing.Size(815, 25);
             this.lblStatus.TabIndex = 6;
             this.lblStatus.Text = "label3";
             // 
@@ -135,7 +138,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(423, 14);
+            this.label3.Location = new System.Drawing.Point(495, 14);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(95, 13);
             this.label3.TabIndex = 7;
@@ -144,11 +147,13 @@
             // tbxMachineNumber
             // 
             this.tbxMachineNumber.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxMachineNumber.Location = new System.Drawing.Point(524, 9);
+            this.tbxMachineNumber.Location = new System.Drawing.Point(596, 9);
+            this.tbxMachineNumber.MaxLength = 3;
             this.tbxMachineNumber.Name = "tbxMachineNumber";
             this.tbxMachineNumber.Size = new System.Drawing.Size(37, 22);
             this.tbxMachineNumber.TabIndex = 8;
             this.tbxMachineNumber.Text = "1";
+            this.tbxMachineNumber.TextChanged += new System.EventHandler(this.tbxMachineNumber_TextChanged);
             // 
             // btnBeep
             // 
@@ -166,7 +171,7 @@
             this.btnDownloadFingerPrint.Name = "btnDownloadFingerPrint";
             this.btnDownloadFingerPrint.Size = new System.Drawing.Size(112, 48);
             this.btnDownloadFingerPrint.TabIndex = 9;
-            this.btnDownloadFingerPrint.Text = "Download Finger Print Templates";
+            this.btnDownloadFingerPrint.Text = "Get All User Info";
             this.btnDownloadFingerPrint.UseVisualStyleBackColor = true;
             this.btnDownloadFingerPrint.Click += new System.EventHandler(this.btnDownloadFingerPrint_Click);
             // 
@@ -195,7 +200,7 @@
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(743, 37);
+            this.pnlHeader.Size = new System.Drawing.Size(815, 37);
             this.pnlHeader.TabIndex = 712;
             this.pnlHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlHeader_Paint);
             // 
@@ -221,7 +226,7 @@
             this.dgvRecords.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvRecords.Location = new System.Drawing.Point(0, 54);
             this.dgvRecords.Name = "dgvRecords";
-            this.dgvRecords.Size = new System.Drawing.Size(719, 360);
+            this.dgvRecords.Size = new System.Drawing.Size(791, 360);
             this.dgvRecords.TabIndex = 883;
             // 
             // btnPowerOff
@@ -283,7 +288,7 @@
             this.panel1.Controls.Add(this.flowLayoutPanel1);
             this.panel1.Location = new System.Drawing.Point(12, 68);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(719, 414);
+            this.panel1.Size = new System.Drawing.Size(791, 414);
             this.panel1.TabIndex = 891;
             // 
             // flowLayoutPanel1
@@ -298,10 +303,11 @@
             this.flowLayoutPanel1.Controls.Add(this.btnDisableDevice);
             this.flowLayoutPanel1.Controls.Add(this.btnRestartDevice);
             this.flowLayoutPanel1.Controls.Add(this.btnPowerOff);
+            this.flowLayoutPanel1.Controls.Add(this.btnUploadUserInfo);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(719, 54);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(791, 54);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // btnGetAllUserID
@@ -320,15 +326,24 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDeviceInfo.Location = new System.Drawing.Point(11, 45);
             this.lblDeviceInfo.Name = "lblDeviceInfo";
-            this.lblDeviceInfo.Size = new System.Drawing.Size(720, 19);
+            this.lblDeviceInfo.Size = new System.Drawing.Size(792, 19);
             this.lblDeviceInfo.TabIndex = 892;
             this.lblDeviceInfo.Text = "Device Info : --";
+            // 
+            // btnUploadUserInfo
+            // 
+            this.btnUploadUserInfo.Location = new System.Drawing.Point(718, 3);
+            this.btnUploadUserInfo.Name = "btnUploadUserInfo";
+            this.btnUploadUserInfo.Size = new System.Drawing.Size(65, 48);
+            this.btnUploadUserInfo.TabIndex = 893;
+            this.btnUploadUserInfo.Text = "Upload User Info";
+            this.btnUploadUserInfo.UseVisualStyleBackColor = true;
             // 
             // Master
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(743, 508);
+            this.ClientSize = new System.Drawing.Size(815, 508);
             this.Controls.Add(this.lblDeviceInfo);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pnlHeader);
@@ -375,6 +390,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label lblDeviceInfo;
         private System.Windows.Forms.Button btnGetAllUserID;
+        private System.Windows.Forms.Button btnUploadUserInfo;
     }
 }
 

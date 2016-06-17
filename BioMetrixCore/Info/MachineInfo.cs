@@ -11,12 +11,10 @@ namespace BioMetrixCore
         public DateTime DateOnlyRecord
         {
             get { return DateTime.Parse(DateTime.Parse(DateTimeRecord).ToString("yyyy-MM-dd")); }
-            set { }
         }
         public DateTime TimeOnlyRecord
         {
             get { return DateTime.Parse(DateTime.Parse(DateTimeRecord).ToString("hh:mm:ss tt")); }
-            set { }
         }
 
     }
