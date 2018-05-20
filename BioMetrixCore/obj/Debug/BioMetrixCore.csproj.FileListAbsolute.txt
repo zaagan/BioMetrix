@@ -10,3 +10,15 @@ D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.Proper
 D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.csproj.GenerateResource.Cache
 D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.exe
 D:\Zktech\ZKTeco Using C#\BioMatrix\BioMetrixCore\obj\Debug\BioMetrixCore.pdb
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\bin\Debug\BioMetrixCore.exe.config
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\Interop.zkemkeeper.dll
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.csproj.ResolveComReference.cache
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.exe
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.pdb
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\bin\Debug\BioMetrixCore.exe
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\bin\Debug\BioMetrixCore.pdb
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.csprojResolveAssemblyReference.cache
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.DataEmpty.resources
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.Master.resources
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.Properties.Resources.resources
+D:\Data Jhony\Documents\GitHub\BioMetrix\BioMetrixCore\obj\Debug\BioMetrixCore.csproj.GenerateResource.Cache

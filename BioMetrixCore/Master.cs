@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BioMetrixCore
 {
@@ -81,17 +82,17 @@ namespace BioMetrixCore
         }
 
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private async void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
-                this.Cursor = Cursors.WaitCursor;
+                //this.Cursor = Cursors.WaitCursor;
                 ShowStatusBar(string.Empty, true);
 
                 if (IsDeviceConnected)
                 {
                     IsDeviceConnected = false;
-                    this.Cursor = Cursors.Default;
+                    //this.Cursor = Cursors.Default;
 
                     return;
                 }
@@ -105,20 +106,20 @@ namespace BioMetrixCore
                 if (!int.TryParse(port, out portNumber))
                     throw new Exception("Not a valid port number");
 
-                bool isValidIpA = UniversalStatic.ValidateIP(ipAddress);
+                bool isValidIpA = await Task.Run(() => UniversalStatic.ValidateIP(ipAddress));
                 if (!isValidIpA)
                     throw new Exception("The Device IP is invalid !!");
 
-                isValidIpA = UniversalStatic.PingTheDevice(ipAddress);
+                isValidIpA = await Task.Run(() => UniversalStatic.PingTheDevice(ipAddress));
                 if (!isValidIpA)
                     throw new Exception("The device at " + ipAddress + ":" + port + " did not respond!!");
 
                 objZkeeper = new ZkemClient(RaiseDeviceEvent);
-                IsDeviceConnected = objZkeeper.Connect_Net(ipAddress, portNumber);
+                IsDeviceConnected = await Task.Run(() => objZkeeper.Connect_Net(ipAddress, portNumber));
 
                 if (IsDeviceConnected)
                 {
-                    string deviceInfo = manipulator.FetchDeviceInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
+                    string deviceInfo = await Task.Run(() => manipulator.FetchDeviceInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim())));
                     lblDeviceInfo.Text = deviceInfo;
                 }
 
@@ -198,13 +199,13 @@ namespace BioMetrixCore
             objZkeeper.Beep(100);
         }
 
-        private void btnDownloadFingerPrint_Click(object sender, EventArgs e)
+        private async void btnDownloadFingerPrint_Click(object sender, EventArgs e)
         {
             try
             {
                 ShowStatusBar(string.Empty, true);
-
-                ICollection<UserInfo> lstFingerPrintTemplates = manipulator.GetAllUserInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
+                dgvRecords.DataSource = null;
+                ICollection<UserInfo> lstFingerPrintTemplates = await GetAllUserInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
                 if (lstFingerPrintTemplates != null && lstFingerPrintTemplates.Count > 0)
                 {
                     BindToGridView(lstFingerPrintTemplates);
@@ -217,17 +218,21 @@ namespace BioMetrixCore
             {
                 DisplayListOutput(ex.Message);
             }
-
         }
 
+        private async Task<ICollection<UserInfo>> GetAllUserInfo(ZkemClient objZkeeper, int machineNumber)
+        {
+            ICollection<UserInfo> lstFingerPrintTemplates = await Task.Run(() => manipulator.GetAllUserInfo(objZkeeper, machineNumber));
+            return lstFingerPrintTemplates;
+        }
 
-        private void btnPullData_Click(object sender, EventArgs e)
+        private async void btnPullData_Click(object sender, EventArgs e)
         {
             try
             {
                 ShowStatusBar(string.Empty, true);
-
-                ICollection<MachineInfo> lstMachineInfo = manipulator.GetLogData(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
+                dgvRecords.DataSource = null;
+                ICollection<MachineInfo> lstMachineInfo = await GetLogData(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
 
                 if (lstMachineInfo != null && lstMachineInfo.Count > 0)
                 {
@@ -241,9 +246,13 @@ namespace BioMetrixCore
             {
                 DisplayListOutput(ex.Message);
             }
-
         }
 
+        private async Task<ICollection<MachineInfo>> GetLogData(ZkemClient objZkeeper, int machineNumber)
+        {
+            ICollection<MachineInfo> lstMachineInfo = await Task.Run(() => manipulator.GetLogData(objZkeeper, machineNumber));
+            return lstMachineInfo;
+        }
 
         private void ClearGrid()
         {
@@ -264,7 +273,7 @@ namespace BioMetrixCore
             UniversalStatic.ChangeGridProperties(dgvRecords);
         }
 
-      
+
 
         private void DisplayListOutput(string message)
         {
@@ -331,7 +340,7 @@ namespace BioMetrixCore
             lstDeviceInfo.Add(new DeviceTimeInfo() { DeviceTime = deviceTime });
             BindToGridView(lstDeviceInfo);
         }
-        
+
 
         private void btnEnableDevice_Click(object sender, EventArgs e)
         {
@@ -340,7 +349,7 @@ namespace BioMetrixCore
 
         }
 
-     
+
 
         private void btnDisableDevice_Click(object sender, EventArgs e)
         {

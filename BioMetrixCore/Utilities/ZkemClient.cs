@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using zkemkeeper;
+using System.Threading;
 
 namespace BioMetrixCore
 {
@@ -146,20 +146,65 @@ namespace BioMetrixCore
             return objCZKEM.QueryState(ref State);
         }
 
+        private delegate bool DelegateReadAllGLogData(int dwMachineNumber);
+        private DelegateReadAllGLogData DelegateReadAllGLogDataAsync;
+        private bool IsCompleteReadAllGLogData;
+        private bool ReturnReadAllGLogData;
         public bool ReadAllGLogData(int dwMachineNumber)
         {
-            return objCZKEM.ReadAllGLogData(dwMachineNumber);
+            IsCompleteReadAllGLogData = false;
+            DelegateReadAllGLogDataAsync = new DelegateReadAllGLogData(objCZKEM.ReadAllGLogData);
+            IAsyncResult IAR = DelegateReadAllGLogDataAsync.BeginInvoke(dwMachineNumber, new AsyncCallback(CompleteReadAllGLogData), null);
+            while (!IsCompleteReadAllGLogData) { Thread.Sleep(1000); }
+            return ReturnReadAllGLogData;
+            //return objCZKEM.ReadAllGLogData(dwMachineNumber);
         }
 
+        private void CompleteReadAllGLogData(IAsyncResult IAR)
+        {
+            ReturnReadAllGLogData = DelegateReadAllGLogDataAsync.EndInvoke(IAR);
+            IsCompleteReadAllGLogData = true;
+        }
 
+        private delegate bool DelegateReadAllTemplate(int dwMachineNumber);
+        private DelegateReadAllTemplate DelegateReadAllTemplateAsync;
+        private bool IsCompleteReadAllTemplate;
+        private bool ReturnReadAllTemplate;
         public bool ReadAllTemplate(int dwMachineNumber)
         {
-            return objCZKEM.ReadAllTemplate(dwMachineNumber);
+            IsCompleteReadAllTemplate = false;
+            DelegateReadAllTemplateAsync = new DelegateReadAllTemplate(objCZKEM.ReadAllTemplate);
+            IAsyncResult IAR = DelegateReadAllTemplateAsync.BeginInvoke(dwMachineNumber, new AsyncCallback(CompleteReadAllTemplate), null);
+            while (!IsCompleteReadAllTemplate) { Thread.Sleep(1000); }
+            return ReturnReadAllTemplate;
+            //return objCZKEM.ReadAllTemplate(dwMachineNumber);
         }
 
+        private void CompleteReadAllTemplate(IAsyncResult IAR)
+        {
+            ReturnReadAllTemplate = DelegateReadAllTemplateAsync.EndInvoke(IAR);
+            IsCompleteReadAllTemplate = true;
+        }
+
+        private delegate bool DelegateReadAllUserID(int dwMachineNumber);
+        private DelegateReadAllUserID DelegateReadAllUserIDAsync;
+        private bool IsCompleteReadAllUserID;
+        private bool ReturnReadAllUserID;
         public bool ReadAllUserID(int dwMachineNumber)
         {
-            return objCZKEM.ReadAllUserID(dwMachineNumber);
+            IsCompleteReadAllUserID = false;
+            DelegateReadAllUserIDAsync = new DelegateReadAllUserID(objCZKEM.ReadAllUserID);
+            IAsyncResult IAR = DelegateReadAllUserIDAsync.BeginInvoke(dwMachineNumber, new AsyncCallback(CompleteReadAllUserID), null);
+            //IAR.AsyncWaitHandle.WaitOne(,)
+            while (!IsCompleteReadAllUserID) { Thread.Sleep(1000); }
+            return ReturnReadAllUserID;
+            //return  objCZKEM.ReadAllUserID(dwMachineNumber);
+        }
+
+        private void CompleteReadAllUserID(IAsyncResult IAR)
+        {
+            ReturnReadAllUserID = DelegateReadAllUserIDAsync.EndInvoke(IAR);
+            IsCompleteReadAllUserID = true;
         }
 
         public bool RefreshData(int dwMachineNumber)
@@ -198,6 +243,7 @@ namespace BioMetrixCore
         {
             return objCZKEM.SSR_GetAllUserInfo(dwMachineNumber, out dwEnrollNumber, out Name, out Password, out Privilege, out Enabled);
         }
+
         public bool GetAllGLogData(int dwMachineNumber, ref int dwTMachineNumber, ref int dwEnrollNumber, ref int dwEMachineNumber, ref int dwVerifyMode, ref int dwInOutMode, ref int dwYear, ref int dwMonth, ref int dwDay, ref int dwHour, ref int dwMinute)
         {
             throw new NotImplementedException();
@@ -576,7 +622,7 @@ namespace BioMetrixCore
             throw new NotImplementedException();
         }
 
-    
+
 
         public bool GetPhotoByName(int dwMachineNumber, string PhotoName, out byte PhotoData, out int PhotoLength)
         {
@@ -701,7 +747,7 @@ namespace BioMetrixCore
             throw new NotImplementedException();
         }
 
-    
+
         public int GetBackupNumber(int dwMachineNumber)
         {
             throw new NotImplementedException();
