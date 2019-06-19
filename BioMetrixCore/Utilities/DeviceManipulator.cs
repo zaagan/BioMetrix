@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace BioMetrixCore
 {
     internal class DeviceManipulator
     {
 
-        public ICollection<UserInfo> GetAllUserInfo(ZkemClient objZkeeper, int machineNumber)
+        public async Task<ICollection<UserInfo>> GetAllUserInfo(ZkemClient objZkeeper, int machineNumber)
         {
             string sdwEnrollNumber = string.Empty, sName = string.Empty, sPassword = string.Empty, sTmpData = string.Empty;
             int iPrivilege = 0, iTmpLength = 0, iFlag = 0, idwFingerIndex;
@@ -15,35 +17,44 @@ namespace BioMetrixCore
 
             ICollection<UserInfo> lstFPTemplates = new List<UserInfo>();
 
-            objZkeeper.ReadAllUserID(machineNumber);
-            objZkeeper.ReadAllTemplate(machineNumber);
+            bool ReadAllUserID;
+            ReadAllUserID = await Task.Run(() => objZkeeper.ReadAllUserID(machineNumber));
 
-            while (objZkeeper.SSR_GetAllUserInfo(machineNumber, out sdwEnrollNumber, out sName, out sPassword, out iPrivilege, out bEnabled))
+            if (ReadAllUserID)
             {
-                for (idwFingerIndex = 0; idwFingerIndex < 10; idwFingerIndex++)
+                bool ReadAllTemplate;
+                ReadAllTemplate = await Task.Run(() => objZkeeper.ReadAllTemplate(machineNumber));
+                //Thread.Sleep(5000);
+                if (ReadAllTemplate)
                 {
-                    if (objZkeeper.GetUserTmpExStr(machineNumber, sdwEnrollNumber, idwFingerIndex, out iFlag, out sTmpData, out iTmpLength))
+                    UserInfo fpInfo;
+                    while (objZkeeper.SSR_GetAllUserInfo(machineNumber, out sdwEnrollNumber, out sName, out sPassword, out iPrivilege, out bEnabled))
                     {
-                        UserInfo fpInfo = new UserInfo();
-                        fpInfo.MachineNumber = machineNumber;
-                        fpInfo.EnrollNumber = sdwEnrollNumber;
-                        fpInfo.Name = sName;
-                        fpInfo.FingerIndex = idwFingerIndex;
-                        fpInfo.TmpData = sTmpData;
-                        fpInfo.Privelage = iPrivilege;
-                        fpInfo.Password = sPassword;
-                        fpInfo.Enabled = bEnabled;
-                        fpInfo.iFlag = iFlag.ToString();
+                        for (idwFingerIndex = 0; idwFingerIndex < 10; idwFingerIndex++)
+                        {
+                            if (objZkeeper.GetUserTmpExStr(machineNumber, sdwEnrollNumber, idwFingerIndex, out iFlag, out sTmpData, out iTmpLength))
+                            {
+                                fpInfo = new UserInfo();
+                                fpInfo.MachineNumber = machineNumber;
+                                fpInfo.EnrollNumber = sdwEnrollNumber;
+                                fpInfo.Name = sName;
+                                fpInfo.FingerIndex = idwFingerIndex;
+                                fpInfo.TmpData = sTmpData;
+                                fpInfo.Privelage = iPrivilege;
+                                fpInfo.Password = sPassword;
+                                fpInfo.Enabled = bEnabled;
+                                fpInfo.iFlag = iFlag.ToString();
 
-                        lstFPTemplates.Add(fpInfo);
+                                lstFPTemplates.Add(fpInfo);
+                            }
+                        }
                     }
                 }
-
             }
             return lstFPTemplates;
         }
 
-        public ICollection<MachineInfo> GetLogData(ZkemClient objZkeeper, int machineNumber)
+        public async Task<ICollection<MachineInfo>> GetLogData(ZkemClient objZkeeper, int machineNumber)
         {
             string dwEnrollNumber1 = "";
             int dwVerifyMode = 0;
@@ -58,22 +69,25 @@ namespace BioMetrixCore
 
             ICollection<MachineInfo> lstEnrollData = new List<MachineInfo>();
 
-            objZkeeper.ReadAllGLogData(machineNumber);
-
-            while (objZkeeper.SSR_GetGeneralLogData(machineNumber, out dwEnrollNumber1, out dwVerifyMode, out dwInOutMode, out dwYear, out dwMonth, out dwDay, out dwHour, out dwMinute, out dwSecond, ref dwWorkCode))
-
-
+            bool ReadAllGLogData;
+            ReadAllGLogData = await Task.Run(() => objZkeeper.ReadAllGLogData(machineNumber));
+            //Thread.Sleep(5000);
+            if (ReadAllGLogData)
             {
-                string inputDate = new DateTime(dwYear, dwMonth, dwDay, dwHour, dwMinute, dwSecond).ToString();
+                MachineInfo objInfo;
+                string inputDate;
+                while (objZkeeper.SSR_GetGeneralLogData(machineNumber, out dwEnrollNumber1, out dwVerifyMode, out dwInOutMode, out dwYear, out dwMonth, out dwDay, out dwHour, out dwMinute, out dwSecond, ref dwWorkCode))
+                {
+                    inputDate = new DateTime(dwYear, dwMonth, dwDay, dwHour, dwMinute, dwSecond).ToString();
 
-                MachineInfo objInfo = new MachineInfo();
-                objInfo.MachineNumber = machineNumber;
-                objInfo.IndRegID = int.Parse(dwEnrollNumber1);
-                objInfo.DateTimeRecord = inputDate;
+                    objInfo = new MachineInfo();
+                    objInfo.MachineNumber = machineNumber;
+                    objInfo.IndRegID = int.Parse(dwEnrollNumber1);
+                    objInfo.DateTimeRecord = inputDate;
 
-                lstEnrollData.Add(objInfo);
+                    lstEnrollData.Add(objInfo);
+                }
             }
-
             return lstEnrollData;
         }
 
@@ -86,10 +100,11 @@ namespace BioMetrixCore
             int dwEnabled = 0;
 
             ICollection<UserIDInfo> lstUserIDInfo = new List<UserIDInfo>();
+            UserIDInfo userID;
 
             while (objZkeeper.GetAllUserID(machineNumber, ref dwEnrollNumber, ref dwEMachineNumber, ref dwBackUpNumber, ref dwMachinePrivelage, ref dwEnabled))
             {
-                UserIDInfo userID = new UserIDInfo();
+                userID = new UserIDInfo();
                 userID.BackUpNumber = dwBackUpNumber;
                 userID.Enabled = dwEnabled;
                 userID.EnrollNumber = dwEnrollNumber;
@@ -112,13 +127,19 @@ namespace BioMetrixCore
             int idwFingerIndex = 0;// [ <--- Enter your fingerprint index here ]
             int iFlag = 0;
 
-            objZkeeper.ReadAllTemplate(machineNumber);
-
-            while (objZkeeper.SSR_GetUserInfo(machineNumber, enrollNo, out name, out password, out previlage, out enabled))
+            bool ReadAllTemplate;
+            ReadAllTemplate = objZkeeper.ReadAllTemplate(machineNumber);
+            if (ReadAllTemplate)
             {
-                if (objZkeeper.GetUserTmpEx(machineNumber, enrollNo, idwFingerIndex, out iFlag, out byTmpData[0], out tempLength))
+
+                //objZkeeper.ReadAllTemplate(machineNumber);
+
+                while (objZkeeper.SSR_GetUserInfo(machineNumber, enrollNo, out name, out password, out previlage, out enabled))
                 {
-                    break;
+                    if (objZkeeper.GetUserTmpEx(machineNumber, enrollNo, idwFingerIndex, out iFlag, out byTmpData[0], out tempLength))
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -207,7 +228,6 @@ namespace BioMetrixCore
 
             string returnValue = string.Empty;
 
-
             objZkeeper.GetFirmwareVersion(machineNumber, ref returnValue);
             if (returnValue.Trim() != string.Empty)
             {
@@ -215,7 +235,6 @@ namespace BioMetrixCore
                 sb.Append(returnValue);
                 sb.Append(",");
             }
-
 
             returnValue = string.Empty;
             objZkeeper.GetVendor(ref returnValue);
@@ -257,8 +276,6 @@ namespace BioMetrixCore
 
             return sb.ToString();
         }
-
-
 
     }
 }
