@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using zkemkeeper;
 
 namespace BioMetrixCore
 {
@@ -80,6 +81,11 @@ namespace BioMetrixCore
 
         }
 
+        private void zkemClient_OnFinger()
+        {
+            /* control on finger event here */
+        }
+
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -116,8 +122,12 @@ namespace BioMetrixCore
                 objZkeeper = new ZkemClient(RaiseDeviceEvent);
                 IsDeviceConnected = objZkeeper.Connect_Net(ipAddress, portNumber);
 
+                /* once device connection has been established, the events can be registered using line 128-129 */
                 if (IsDeviceConnected)
                 {
+                    if (this.objZkeeper.objCZKEM.RegEvent(1, 65535))
+                        objZkeeper.objCZKEM.OnFinger += new _IZKEMEvents_OnFingerEventHandler(zkemClient_OnFinger);
+
                     string deviceInfo = manipulator.FetchDeviceInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
                     lblDeviceInfo.Text = deviceInfo;
                 }
@@ -354,6 +364,9 @@ namespace BioMetrixCore
         private void tbxMachineNumber_TextChanged(object sender, EventArgs e)
         { UniversalStatic.ValidateInteger(tbxMachineNumber); }
 
+        private void Master_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }
