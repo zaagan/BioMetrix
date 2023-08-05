@@ -122,9 +122,11 @@ namespace BioMetrixCore
                 objZkeeper = new ZkemClient(RaiseDeviceEvent);
                 IsDeviceConnected = objZkeeper.Connect_Net(ipAddress, portNumber);
 
+                /* once device connection has been established, the events can be registered using line 128-129 */
                 if (IsDeviceConnected)
                 {
-                    objZkeeper.objCZKEM.OnFinger += new _IZKEMEvents_OnFingerEventHandler(zkemClient_OnFinger);
+                    if (this.objZkeeper.objCZKEM.RegEvent(1, 65535))
+                        objZkeeper.objCZKEM.OnFinger += new _IZKEMEvents_OnFingerEventHandler(zkemClient_OnFinger);
 
                     string deviceInfo = manipulator.FetchDeviceInfo(objZkeeper, int.Parse(tbxMachineNumber.Text.Trim()));
                     lblDeviceInfo.Text = deviceInfo;
