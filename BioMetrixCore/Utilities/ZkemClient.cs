@@ -12,7 +12,7 @@ namespace BioMetrixCore
         { this.RaiseDeviceEvent = RaiseDeviceEvent; }
 
 
-        CZKEM objCZKEM = new CZKEM();
+        internal CZKEM objCZKEM = new CZKEM();
 
         #region 'What we will be using'
 
