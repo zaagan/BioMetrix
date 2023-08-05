@@ -52,8 +52,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnGetAllUserID = new System.Windows.Forms.Button();
-            this.lblDeviceInfo = new System.Windows.Forms.Label();
             this.btnUploadUserInfo = new System.Windows.Forms.Button();
+            this.lblDeviceInfo = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecords)).BeginInit();
             this.panel1.SuspendLayout();
@@ -320,6 +320,15 @@
             this.btnGetAllUserID.UseVisualStyleBackColor = true;
             this.btnGetAllUserID.Click += new System.EventHandler(this.btnGetAllUserID_Click);
             // 
+            // btnUploadUserInfo
+            // 
+            this.btnUploadUserInfo.Location = new System.Drawing.Point(718, 3);
+            this.btnUploadUserInfo.Name = "btnUploadUserInfo";
+            this.btnUploadUserInfo.Size = new System.Drawing.Size(65, 48);
+            this.btnUploadUserInfo.TabIndex = 893;
+            this.btnUploadUserInfo.Text = "Upload User Info";
+            this.btnUploadUserInfo.UseVisualStyleBackColor = true;
+            // 
             // lblDeviceInfo
             // 
             this.lblDeviceInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -329,15 +338,6 @@
             this.lblDeviceInfo.Size = new System.Drawing.Size(792, 19);
             this.lblDeviceInfo.TabIndex = 892;
             this.lblDeviceInfo.Text = "Device Info : --";
-            // 
-            // btnUploadUserInfo
-            // 
-            this.btnUploadUserInfo.Location = new System.Drawing.Point(718, 3);
-            this.btnUploadUserInfo.Name = "btnUploadUserInfo";
-            this.btnUploadUserInfo.Size = new System.Drawing.Size(65, 48);
-            this.btnUploadUserInfo.TabIndex = 893;
-            this.btnUploadUserInfo.Text = "Upload User Info";
-            this.btnUploadUserInfo.UseVisualStyleBackColor = true;
             // 
             // Master
             // 
@@ -354,6 +354,7 @@
             this.Name = "Master";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Biometric Device Demo";
+            this.Load += new System.EventHandler(this.Master_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecords)).EndInit();
