@@ -1,5 +1,6 @@
 # BioMetrix
-A ZKteco Device Implementation
+A ZKteco Device of Implementation
+
 
 
 Please go through the following link for the full description :
